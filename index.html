@@ -5,122 +5,126 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
     <style>
       body {
-  margin: 0;
-  padding: 0;
-}
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
 
-#menu {
-  background: #fff;
-  position: absolute;
-  z-index: 1;
-  top: 10px;
-  right: 10px;
-  border-radius: 3px;
-  width: 120px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  font-family: "Open Sans", sans-serif;
-}
+    #menu {
+      background: #fff;
+      position: absolute;
+      z-index: 1;
+      top: 10px;
+      right: 10px;
+      border-radius: 3px;
+      width: 120px;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      font-family: "Open Sans", sans-serif;
+    }
 
-#menu a {
-  font-size: 13px;
-  color: #404040;
-  display: block;
-  margin: 0;
-  padding: 0;
-  padding: 10px;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  text-align: center;
-}
+    #menu a {
+      font-size: 13px;
+      color: #404040;
+      display: block;
+      margin: 0;
+      padding: 0;
+      padding: 10px;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
 
-#menu a:last-child {
-  border: none;
-}
+    #menu a:last-child {
+      border: none;
+    }
 
-#menu a:hover {
-  background-color: #f8f8f8;
-  color: #404040;
-}
+    #menu a:hover {
+      background-color: #f8f8f8;
+      color: #404040;
+    }
 
-#menu a.active {
-  background-color: #3887be;
-  color: #ffffff;
-}
+    #menu a.active {
+      background-color: #3887be;
+      color: #ffffff;
+    }
 
-#menu a.active:hover {
-  background: #3074a4;
-}
+    #menu a.active:hover {
+      background: #3074a4;
+    }
 
-.info-box {
-  height: 75px;
-  width: 150px;
-  position: absolute;
-  bottom: 40px;
-  left: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 8px;
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  font-family: "Open Sans", sans-serif;
-}
+    .info-box {
+      height: 60px;
+      width: 130px;
+      position: absolute;
+      bottom: 40px;
+      left: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 8px;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      font-family: "Open Sans", sans-serif;
+    }
+  .info-box-div {
+      font-size: 13px;
+      color: #404040;
+  }
     </style> 
   </head>
 <body>
 <nav id="menu"></nav>
 <div id="map"></div>
 <div class="info-box">
-  <p>Ward data retrieved from <a href="https://opendata.dc.gov">Open Data DC catalog.</a></p>
+  <div class="info-box-div">Ward data retrieved from <a href="https://opendata.dc.gov">Open Data DC catalog.</a><div>
 </div>
   <script>
     mapboxgl.accessToken =
-  "pk.eyJ1IjoicGxtYXBib3giLCJhIjoiY2w3MHptNzI2MGphbjNubXFscXI3emhkaiJ9.s1BHM0dRlXybWMX7RydmVw";
-const map = new mapboxgl.Map({
-  container: "map",
-  style: "mapbox://styles/plmapbox/cl70xee7w001114nytcmh5lho",
-  zoom: 11,
-  center: [-77.0369, 38.9072]
-});
+      "pk.eyJ1IjoicGxtYXBib3giLCJhIjoiY2w3MHptNzI2MGphbjNubXFscXI3emhkaiJ9.s1BHM0dRlXybWMX7RydmVw";
+    const map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/plmapbox/cl70xee7w001114nytcmh5lho",
+      zoom: 11,
+      center: [-77.0369, 38.9072]
+    });
 
-// enumerate ids of the layers
-var toggleableLayerIds = ["2022", "2012", "2002", "1992", "1982", "1975"];
+    // enumerate ids of the layers
+    var toggleableLayerIds = ["2022", "2012", "2002", "1992", "1982", "1975"];
 
-// set up the corresponding toggle button for each layer
-for (var i = 0; i < toggleableLayerIds.length; i++) {
-  var id = toggleableLayerIds[i];
+    // set up the corresponding toggle button for each layer
+    for (var i = 0; i < toggleableLayerIds.length; i++) {
+      var id = toggleableLayerIds[i];
 
-  var link = document.createElement("a");
-  link.href = "#";
-  link.className = "";
-  link.textContent = id;
+      var link = document.createElement("a");
+      link.href = "#";
+      link.className = "";
+      link.textContent = id;
 
-  if (i == 0) {
-    link.className = "active";
-  }
-
-  link.onclick = function (e) {
-    var clickedLayer = this.textContent;
-    e.preventDefault();
-    e.stopPropagation();
-    for (var j = 0; j < toggleableLayerIds.length; j++) {
-      if (clickedLayer === toggleableLayerIds[j]) {
-        layers.children[j].className = "active";
-        map.setLayoutProperty(toggleableLayerIds[j], "visibility", "visible");
-      } else {
-        layers.children[j].className = "";
-        map.setLayoutProperty(toggleableLayerIds[j], "visibility", "none");
+      if (i == 0) {
+        link.className = "active";
       }
-    }
-  };
 
-  var layers = document.getElementById("menu");
-  layers.appendChild(link);
-}
+      link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+        for (var j = 0; j < toggleableLayerIds.length; j++) {
+          if (clickedLayer === toggleableLayerIds[j]) {
+            layers.children[j].className = "active";
+            map.setLayoutProperty(toggleableLayerIds[j], "visibility", "visible");
+          } else {
+            layers.children[j].className = "";
+            map.setLayoutProperty(toggleableLayerIds[j], "visibility", "none");
+          }
+        }
+      };
+
+      var layers = document.getElementById("menu");
+      layers.appendChild(link);
+    }
   </script>
 </body>
 </html>
