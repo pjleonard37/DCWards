@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
     <style>
       body {
   margin: 0;
@@ -75,5 +77,50 @@
 <div class="info-box">
   <p>Ward data retrieved from <a href="https://opendata.dc.gov">Open Data DC catalog.</a></p>
 </div>
+  <script>
+    mapboxgl.accessToken =
+  "pk.eyJ1IjoicGxtYXBib3giLCJhIjoiY2w3MHptNzI2MGphbjNubXFscXI3emhkaiJ9.s1BHM0dRlXybWMX7RydmVw";
+const map = new mapboxgl.Map({
+  container: "map",
+  style: "mapbox://styles/plmapbox/cl70xee7w001114nytcmh5lho",
+  zoom: 11,
+  center: [-77.0369, 38.9072]
+});
+
+// enumerate ids of the layers
+var toggleableLayerIds = ["2022", "2012", "2002", "1992", "1982", "1975"];
+
+// set up the corresponding toggle button for each layer
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+  var id = toggleableLayerIds[i];
+
+  var link = document.createElement("a");
+  link.href = "#";
+  link.className = "";
+  link.textContent = id;
+
+  if (i == 0) {
+    link.className = "active";
+  }
+
+  link.onclick = function (e) {
+    var clickedLayer = this.textContent;
+    e.preventDefault();
+    e.stopPropagation();
+    for (var j = 0; j < toggleableLayerIds.length; j++) {
+      if (clickedLayer === toggleableLayerIds[j]) {
+        layers.children[j].className = "active";
+        map.setLayoutProperty(toggleableLayerIds[j], "visibility", "visible");
+      } else {
+        layers.children[j].className = "";
+        map.setLayoutProperty(toggleableLayerIds[j], "visibility", "none");
+      }
+    }
+  };
+
+  var layers = document.getElementById("menu");
+  layers.appendChild(link);
+}
+  </script>
 </body>
 </html>
